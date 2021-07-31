@@ -1,0 +1,24 @@
+<body>
+  <script>
+    const log = console.log;
+
+    const iterable = {
+      [Symbol.iterator]() { // 이건 사실 제너레이터
+        let i = 3;
+
+        return  { // 여기서부터 이터레이터
+          next() {
+            return i === 0 ? { done: true } : { value: i--, done: false };
+          },
+          [Symbol.iterator]() { // 이터레이터 자기 자신을 리턴
+            return this;
+          },
+        };
+      },
+    };
+
+    for (const val of iterable) {
+      log(val);
+    }
+  </script>
+</body>
