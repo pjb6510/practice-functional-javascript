@@ -1,0 +1,104 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script>
+    titleLog("generator");
+    function* generator() {
+      yield 1;
+      yield 2;
+      if (false) yield 3;
+      yield 4;
+
+      return 100;
+    }
+
+    titleLog("iterator.next()");
+    const iterator = generator();
+    log(iterator.next());
+    log(iterator.next());
+    log(iterator.next());
+    log(iterator.next()); // done이 true가 될 때, return 값이 반환.
+
+    titleLog("for-of");
+    for (const val of generator()) {
+      log(val); // 순회될 때는 return 값은 포함되지 않음.
+    }
+
+    titleLog("*odds");
+    function* odds(limit) {
+      let i = 1;
+
+      while (i < limit) {
+        yield i;
+        i += 2;
+      }
+    }
+    // 평범한 홀수 수열을 만드는 제너레이터
+
+    const oddIter = odds(10);
+    log(oddIter.next());
+    log(oddIter.next());
+    log(oddIter.next());
+    log(oddIter.next());
+    log(oddIter.next());
+    log(oddIter.next());
+
+    for (const odd of odds(15)) {
+      log(odd);
+    }
+
+    titleLog("*infinity");
+    function* infinity(start = 0) {
+      while (true) yield start++;
+    }
+    // 시작값을 받아서 1씩 증가하는 수열을 만드는 제너레이터
+
+    const infIter = infinity();
+    log(infIter.next());
+    log(infIter.next());
+    log(infIter.next());
+    log(infIter.next());
+
+    titleLog("*limit");
+    function* limit(iter, limit) {
+      for (const val of iter) {
+        if (limit <= val) return;
+
+        yield val;
+      }
+    }
+    // iterator를 받아서 limit보다 크면 순회를 멈추는 제너레이터
+
+    const limitedInfIter = limit(infinity(3), 7);
+
+    for (const limitedInfVal of limitedInfIter) {
+      log(limitedInfVal);
+    }
+
+    titleLog("*newOdds");
+    function* newOdds(limitNum) {
+      for (const val of limit(infinity(1), limitNum)) {
+        if (val % 2) yield val;
+      }
+    }
+    // infinity와 limit을 사용해 만든 newOdds
+
+    const newOddsIter = newOdds(10);
+    log(newOddsIter.next());
+    log(newOddsIter.next());
+    log(newOddsIter.next());
+    log(newOddsIter.next());
+    log(newOddsIter.next());
+    log(newOddsIter.next());
+
+    titleLog("spread operator");
+    log(...odds(10));
+    log(...limit(infinity(10), 15));
+    // iterable/iterator 프로토콜을 따르는 spread연산자.
+
+    titleLog("rest");
+    const [a, b, ...rest] = odds(10);
+    log(a);
+    log(b);
+    log(a, b, rest);
+  </script>
+</body>
