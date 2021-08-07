@@ -33,7 +33,7 @@
     try {
       log(document.querySelectorAll("*").map((node) => node.nodeName)); // error
     } catch (e) {
-      console.error(e); // document.querySelectorAll(...).map is not a function
+      // console.error(e); // document.querySelectorAll(...).map is not a function
     }
 
     log(map((node) => node.nodeName, document.querySelectorAll("*")));
@@ -71,5 +71,42 @@
 
     log(map(([key, value]) => ["key: " + key, value * value], m));
     log(new Map(map(([key, value]) => ["key: " + key, value * value], m)));
+
+    titleLog("reduce function");
+
+    const nums = [1,2,3,4,5];
+
+    let total = 0;
+    for (const n of nums) {
+      total += n;
+    }
+    log('total', total);
+
+    const reduce = (callback, start, iter) => {
+      if (!iter) {
+        iter = start[Symbol.iterator]();
+        start = iter.next().value;
+      } // 이러한 과정을 통해서 start를 생략하고 두 번째 인자를 iter로 사용할 수 있음.
+
+      let result = start;
+      for (const val of iter) {
+        result = callback(result, val);
+      }
+
+      return result;
+    };
+
+    const add = (a, b) => a + b;
+
+    log(reduce(add, nums));
+
+    titleLog("total-price");
+    log(
+      reduce(
+        (price, product) => price + product.price,
+        0,
+        products
+      )
+    );
   </script>
 </body>
