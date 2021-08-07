@@ -1,0 +1,72 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    const products = [
+      { name: "반팔티", price: 15000 },
+      { name: "긴팔티", price: 20000 },
+      { name: "핸드폰케이스", price: 15000 },
+      { name: "후드티", price: 30000 },
+      { name: "바지", price: 25000 },
+    ];
+
+    titleLog("중첩형 사고");
+    titleLog("20000원 이하 상품 가격의 총합");
+    log(
+      _.reduce(
+        (a, b) => a + b,
+        _.filter(
+          (price) => price <= 20000,
+          _.map((product) => product.price, products)
+        )
+      )
+    );
+
+    // 함수형 프로그래밍의 특징
+    // 함수를 중첩하고 연속적으로 실행해가면서 값을 만들어 감.
+    // 읽기 안 좋음...
+
+    titleLog("go function");
+
+    // const go = (value, ...funcs) => {
+    //   for (const func of funcs) {
+    //     value = func(value);
+    //   }
+    // };
+
+    const go = (...args) => _.reduce((val, func) => func(val), args);
+
+    go(
+      0,
+      (a) => a + 1,
+      (a) => a + 10,
+      (a) => a + 100,
+      log
+    ); /// 111
+
+    titleLog("pipe function");
+    const pipe =
+      (firstFunc, ...funcs) =>
+      (...values) =>
+        go(firstFunc(...values), ...funcs);
+
+    const add111 = pipe(
+      (a, b, c) => a + b + c,
+      (a) => a + 10,
+      (a) => a + 100
+    );
+
+    log(add111(0, 1, 2));
+
+    titleLog("20000원 이하 상품 가격의 총합, go를 사용해서.");
+
+    go(
+      products,
+      (products) => _.map((product) => product.price, products),
+      (prices) => _.filter((price) => price <= 20000, prices),
+      (prices) => _.reduce((acc, cur) => acc + cur, 0, prices),
+      log,
+    );
+
+  </script>
+</body>

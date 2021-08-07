@@ -35,3 +35,9 @@ _.reduce = (callback, acc, iter) => {
   return acc;
 };
 
+_.go = (...args) => _.reduce((value, func) => func(value), args);
+
+_.pipe =
+  (firstFunc, ...funcs) =>
+  (...value) =>
+    _.go(firstFunc(...value), ...funcs);
