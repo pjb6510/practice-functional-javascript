@@ -1,0 +1,75 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script>
+    titleLog("map function");
+
+    const products = [
+      { name: "반팔티", price: 15000 },
+      { name: "긴팔티", price: 20000 },
+      { name: "핸드폰케이스", price: 15000 },
+      { name: "후드티", price: 30000 },
+      { name: "바지", price: 25000 },
+    ];
+
+    const map = (callback, iter) => {
+      const result = [];
+
+      for (const value of iter) {
+        result.push(callback(value));
+      }
+
+      return result;
+    };
+
+    const productNames = map((product) => product.name, products);
+    const productPrices = map((product) => product.price, products);
+    log("names", productNames);
+    log("prices", productPrices);
+
+    titleLog("map function's polymorphism");
+    // 이렇게 만든 map함수는 Array.prototype.map 보다 다형성이 좋음.
+
+    titleLog("polymorphism 1.Array-Like Object");
+    try {
+      log(document.querySelectorAll("*").map((node) => node.nodeName)); // error
+    } catch (e) {
+      console.error(e); // document.querySelectorAll(...).map is not a function
+    }
+
+    log(map((node) => node.nodeName, document.querySelectorAll("*")));
+
+    const iter = document.querySelectorAll("*")[Symbol.iterator]();
+    log(iter.next());
+    log(iter.next());
+    log(iter.next());
+    log(iter.next());
+    log(iter.next());
+    log(iter.next());
+
+    titleLog("polymorphism 2.iterator");
+    function* gen() {
+      yield 2;
+      yield 3;
+      yield 4;
+      yield 5;
+    }
+
+    log(map((num) => num * num, gen()));
+
+    titleLog("polymorphism 3.Map");
+
+    const m = new Map();
+    m.set("a", 1);
+    m.set("b", 2);
+    m.set("c", 3);
+
+    const mIter = m[Symbol.iterator]();
+    log(mIter.next());
+    log(mIter.next());
+    log(mIter.next());
+    log(mIter.next());
+
+    log(map(([key, value]) => ["key: " + key, value * value], m));
+    log(new Map(map(([key, value]) => ["key: " + key, value * value], m)));
+  </script>
+</body>
