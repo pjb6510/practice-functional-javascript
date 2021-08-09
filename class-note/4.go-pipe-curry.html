@@ -65,8 +65,88 @@
       (products) => _.map((product) => product.price, products),
       (prices) => _.filter((price) => price <= 20000, prices),
       (prices) => _.reduce((acc, cur) => acc + cur, 0, prices),
+      log
+    );
+
+    titleLog("curry function");
+    const curryy =
+      (func) =>
+      (firstArg, ...restArgs) =>
+        restArgs.length // 인자가 2개 이상이면 (즉, firstArg가 채워진 후 restArgs에 하나라도 들어오면)
+          ? func(firstArg, ...restArgs) // 바로 실행.
+          : (...restArgs) => func(firstArg, ...restArgs); // 2개 미만이면 이후에 인자로 받아서 실행.
+
+    const mult = curryy((a, b) => a * b);
+    log(mult(2, 3));
+
+    const mult3 = mult(3);
+    log(mult3(1));
+    log(mult3(2));
+    log(mult3(3));
+    log(mult3(4));
+    log(mult3(5));
+    log(mult3(6));
+
+    titleLog("20000원 이하 상품 가격의 총합, curry를 적용해서.");
+
+    go(
+      products,
+      _.map((product) => product.price),
+      _.filter((price) => price <= 20000),
+      _.reduce((acc, cur) => acc + cur),
+      log
+    );
+
+    titleLog("파이프라인으로 된 함수 중복코드 제거");
+
+    go(
+      products,
+      _.filter((p) => p.price < 20000),
+      _.map((p) => p.price),
+      _.reduce((a, b) => a + b),
+      log
+    );
+
+    go(
+      products,
+      _.filter((p) => p.price >= 20000),
+      _.map((p) => p.price),
+      _.reduce((a, b) => a + b),
+      log
+    );
+
+    titleLog('addPrice');
+
+    const addPrice = pipe(
+      _.map((product) => product.price),
+      _.reduce((a, b) => a + b)
+    );
+
+    go(
+      products,
+      _.filter((p) => p.price < 20000),
+      addPrice,
       log,
     );
 
+    go(
+      products,
+      _.filter((p) => p.price >= 20000),
+      addPrice,
+      log,
+    );
+
+    titleLog('addPriceWithFilter');
+
+    const addPriceWithFilter = (filterCallback) => pipe(
+      _.filter(filterCallback),
+      addPrice,
+    );
+
+    go(
+      products,
+      addPriceWithFilter((p) => p.price >= 20000),
+      log,
+    );
   </script>
 </body>
