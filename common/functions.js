@@ -1,13 +1,13 @@
 const _ = {};
 
-const curry =
+_.curry =
   (func) =>
   (firstArg, ...restArgs) =>
     restArgs.length
       ? func(firstArg, ...restArgs)
       : (...restArgs) => func(firstArg, ...restArgs);
 
-_.map = curry((callback, iter) => {
+_.map = _.curry((callback, iter) => {
   const result = [];
 
   for (const value of iter) {
@@ -17,7 +17,7 @@ _.map = curry((callback, iter) => {
   return result;
 });
 
-_.filter = curry((callback, iter) => {
+_.filter = _.curry((callback, iter) => {
   const result = [];
 
   for (const value of iter) {
@@ -29,7 +29,7 @@ _.filter = curry((callback, iter) => {
   return result;
 });
 
-_.reduce = curry((callback, acc, iter) => {
+_.reduce = _.curry((callback, acc, iter) => {
   if (iter === undefined) {
     iter = acc[Symbol.iterator]();
     acc = iter.next().value;
@@ -48,10 +48,3 @@ _.pipe =
   (firstFunc, ...funcs) =>
   (...value) =>
     _.go(firstFunc(...value), ...funcs);
-
-_.curry =
-  (func) =>
-  (firstArg, ...restArgs) =>
-    restArgs.length
-      ? func(firstArg, ...restArgs)
-      : (...restArgs) => func(firstArg, ...restArgs);
