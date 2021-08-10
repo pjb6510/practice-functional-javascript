@@ -48,3 +48,10 @@ _.pipe =
   (firstFunc, ...funcs) =>
   (...value) =>
     _.go(firstFunc(...value), ...funcs);
+
+_.curry =
+  (func) =>
+  (firstArg, ...restArgs) =>
+    restArgs.length
+      ? func(firstArg, ...restArgs)
+      : (...restArgs) => func(firstArg, ...restArgs);

@@ -1,0 +1,100 @@
+<body>
+  <div id="cart"></div>
+
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    const products = [
+      { name: "반팔티", price: 15000, quantity: 1, isSelected: true },
+      { name: "긴팔티", price: 20000, quantity: 2, isSelected: false },
+      { name: "핸드폰케이스", price: 15000, quantity: 3, isSelected: true },
+      { name: "후드티", price: 30000, quantity: 4, isSelected: false },
+      { name: "바지", price: 25000, quantity: 5, isSelected: false },
+    ];
+
+    const add = (a, b) => a + b;
+
+    // 총 수량
+    titleLog("총 수량");
+    _.go(
+      products,
+      _.map((product) => product.quantity),
+      _.reduce(add),
+      log
+    );
+
+    titleLog("pipe");
+    const totalQuantityA = _.pipe(
+      _.map((product) => product.quantity),
+      _.reduce(add)
+    );
+
+    const totalPriceA = _.pipe(
+      _.map((product) => product.price * product.quantity),
+      _.reduce(add)
+    );
+
+    log(totalQuantityA(products));
+    log(totalPriceA(products));
+
+    titleLog("추상화");
+    const sum = (mapCallback, iter) =>
+      _.go(iter, _.map(mapCallback), _.reduce(add));
+
+    const totalQuantityB = (products) =>
+      sum((product) => product.quantity, products);
+
+    const totalPriceB = (products) =>
+      sum((product) => product.quantity * product.price, products);
+
+    log(totalQuantityB(products));
+    log(totalPriceB(products));
+
+    titleLog("curry");
+    const curriedSum = _.curry(sum);
+
+    const totalQuantityC = curriedSum((product) => product.quantity);
+    const totalPriceC = curriedSum(
+      (product) => product.quantity * product.price
+    );
+
+    titleLog("HTML");
+
+    document.querySelector("#cart").innerHTML = `
+      <table>
+        <tr>
+          <th>선택</th>
+          <th>상품 이름</th>
+          <th>가격</th>
+          <th>수량</th>
+          <th>총 가격</th>
+        </tr>
+        ${_.go(
+          products,
+          curriedSum(
+            (product) => `
+            <tr>
+              <td><input type="checkbox" ${
+                product.isSelected ? "checked" : ""
+              }></td>
+              <td>${product.name}</td>
+              <td>${product.price}</td>
+              <td>${product.quantity}</td>
+              <td>${product.price * product.quantity}</td>
+            </tr>
+          `
+          )
+        )}
+        <tr>
+          <td colspan="3">합계</td>
+          <td>${totalQuantityC(
+            _.filter((product) => product.isSelected, products)
+          )}</td>
+          <td>${totalPriceC(
+            _.filter((product) => product.isSelected, products)
+          )}</td>
+        </tr>
+      </table>
+    `;
+  </script>
+</body>
