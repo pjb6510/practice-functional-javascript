@@ -1,4 +1,5 @@
 const _ = {};
+const L = {};
 
 _.curry =
   (func) =>
@@ -48,3 +49,21 @@ _.pipe =
   (firstFunc, ...funcs) =>
   (...value) =>
     _.go(firstFunc(...value), ...funcs);
+
+_.range = (length) => {
+  const result = [];
+
+  let i = -1;
+  while (++i < length) {
+    result.push(i);
+  }
+
+  return result;
+};
+
+L.range = function* (length) {
+  let i = -1;
+  while (++i < length) {
+    yield i;
+  }
+};

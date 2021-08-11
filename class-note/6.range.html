@@ -1,0 +1,34 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    titleLog("range function");
+    const range = (length) => {
+      const result = [];
+
+      for (let i = 0; i < length; i += 1) {
+        result.push(i);
+      }
+
+      return result;
+    };
+
+    log(range(5));
+    log(range(2));
+
+    titleLog("lazy range function");
+
+    _.go(
+      _.range(5), // 이미 여기서 배열로 평가됨.
+      _.reduce((a, b) => a + b),
+      log
+    );
+
+    _.go(
+      L.range(5), // 여기선 아직 값이 평가되지 않음.
+      _.reduce((a, b) => a + b),
+      // 여기서 for of 문을 돌면서 next() 될 때마다 generate함수 로직이 실행 됨.
+      log
+    );
+  </script>
+</body>
