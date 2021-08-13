@@ -30,5 +30,15 @@
       // 여기서 for of 문을 돌면서 next() 될 때마다 generate함수 로직이 실행 됨.
       log
     );
+
+    titleLog("test");
+    function test(name, time, func) {
+      console.time(name);
+      while (time--) func();
+      console.timeEnd(name);
+    }
+
+    test("L.range", 10, () => _.reduce((a, b) => a + b, L.range(1000000)));
+    test("range", 10, () => _.reduce((a, b) => a + b, _.range(1000000)));
   </script>
 </body>
