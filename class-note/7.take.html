@@ -1,0 +1,28 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    const take = (limit, iter) => {
+      const result = [];
+
+      for (const value of iter) {
+        result.push(value);
+        if (result.length === limit) {
+          return result;
+        }
+      }
+
+      return result;
+    };
+
+    titleLog("take function");
+
+    console.time('normal range');
+    log(take(10, _.range(100000)));
+    console.timeEnd('normal range');
+
+    console.time('lazy range');
+    log(take(10, L.range(100000)));
+    console.timeEnd('lazy range');
+  </script>
+</body>

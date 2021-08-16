@@ -61,6 +61,20 @@ _.range = (length) => {
   return result;
 };
 
+_.take = (limit, iter) => {
+  const result = [];
+
+  for (const value of iter) {
+    result.push(value);
+
+    if (result.length === limit) {
+      return result;
+    }
+  }
+
+  return result;
+};
+
 L.range = function* (length) {
   let i = -1;
   while (++i < length) {
