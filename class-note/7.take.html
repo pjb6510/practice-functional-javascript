@@ -17,12 +17,12 @@
 
     titleLog("take function");
 
-    console.time('normal range');
+    console.time("normal range");
     log(take(10, _.range(100000)));
-    console.timeEnd('normal range');
+    console.timeEnd("normal range");
 
-    console.time('lazy range');
+    console.time("lazy range");
     log(take(10, L.range(100000)));
-    console.timeEnd('lazy range');
+    console.timeEnd("lazy range");
   </script>
 </body>
