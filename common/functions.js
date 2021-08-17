@@ -75,6 +75,10 @@ _.take = _.curry((limit, iter) => {
   return result;
 });
 
+_.join = _.curry((seperator = ",", iter) =>
+  _.reduce((a, b) => `${a}${seperator}${b}`, iter)
+);
+
 L.range = function* (length) {
   let i = -1;
   while (++i < length) {
@@ -95,3 +99,9 @@ L.filter = _.curry(function* (callback, iter) {
     }
   }
 });
+
+L.entries = function* (obj) {
+  for (const key in obj) {
+    yield [key, obj[key]];
+  }
+};

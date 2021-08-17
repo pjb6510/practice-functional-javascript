@@ -1,0 +1,43 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    titleLog("queryStr function ");
+
+    let queryStr = _.pipe(
+      Object.entries,
+      _.map(([key, value]) => `${key}=${value}`),
+      _.reduce((a, b) => `${a}&${b}`),
+      (string) => "?" + string
+    );
+
+    log(
+      queryStr({
+        limit: 10,
+        offset: 10,
+        type: "notice",
+      })
+    );
+
+    titleLog('join function');
+
+    const join = _.curry((seperator=',', iter) => {
+      return _.reduce((a, b) => `${a}${seperator}${b}`, iter);
+    });
+
+    queryStr = _.pipe(
+      L.entries,
+      L.map(([key, value]) => `${key}=${value}`),
+      join('&'),
+      (string) => "?" + string
+    );
+
+    log(
+      queryStr({
+        limit: 10,
+        offset: 10,
+        type: "notice",
+      })
+    );
+  </script>
+</body>
