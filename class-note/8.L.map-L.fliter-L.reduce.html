@@ -1,0 +1,57 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    titleLog("Lazy map function");
+
+    const list = _.range(100);
+
+    function* Lmap(func, iter) {
+      for (const value of iter) {
+        yield func(value);
+      }
+    }
+
+    const mapIter = Lmap((num) => num * 2, list);
+    log(mapIter.next());
+    log(mapIter.next());
+    log(mapIter.next());
+    log(mapIter.next());
+
+    titleLog("Lazy filter function");
+
+    function* Lfilter(func, iter) {
+      for (const value of iter) {
+        if (func(value)) yield value;
+      }
+    }
+
+    const filterIter = Lfilter((num) => num % 2, list);
+    log(filterIter.next());
+    log(filterIter.next());
+    log(filterIter.next());
+    log(filterIter.next());
+
+    titleLog("eager-evaluation VS lazy-evaluation");
+
+    console.time('eager-evaluation');
+    _.go(
+      _.range(1000000),
+      _.map(n => n + 10),
+      _.filter(n => n % 2),
+      _.take(2),
+      log
+    );
+    console.timeEnd('eager-evaluation');
+
+    console.time('lazy-evaluation');
+    _.go(
+      L.range(1000000),
+      L.map(n => n + 10),
+      L.filter(n => n % 2),
+      _.take(2),
+      log
+    );
+    console.timeEnd('lazy-evaluation');
+  </script>
+</body>

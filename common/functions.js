@@ -61,7 +61,7 @@ _.range = (length) => {
   return result;
 };
 
-_.take = (limit, iter) => {
+_.take = _.curry((limit, iter) => {
   const result = [];
 
   for (const value of iter) {
@@ -73,7 +73,7 @@ _.take = (limit, iter) => {
   }
 
   return result;
-};
+});
 
 L.range = function* (length) {
   let i = -1;
@@ -81,3 +81,17 @@ L.range = function* (length) {
     yield i;
   }
 };
+
+L.map = _.curry(function* (callback, iter) {
+  for (const value of iter) {
+    yield callback(value);
+  }
+});
+
+L.filter = _.curry(function* (callback, iter) {
+  for (const value of iter) {
+    if (callback(value)) {
+      yield value;
+    }
+  }
+});
