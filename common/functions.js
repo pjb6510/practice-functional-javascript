@@ -1,6 +1,8 @@
 const _ = {};
 const L = {};
 
+const isIterable = (value) => !!(value && value[Symbol.iterator]);
+
 _.curry =
   (func) =>
   (firstArg, ...restArgs) =>
@@ -118,3 +120,23 @@ _.takeAll = _.take(Infinity);
 _.map = _.curry(_.pipe(L.map, _.takeAll));
 
 _.filter = _.curry(_.pipe(L.filter, _.takeAll));
+
+L.flatten = function* (iter) {
+  for (const value of iter) {
+    if (isIterable(value)) {
+      yield* value;
+    } else {
+      yield value;
+    }
+  }
+};
+
+L.deepFlat = function* (iter) {
+  for (const value of iter) {
+    if (isIterable(value)) {
+      yield* L.deepFlat(value);
+    } else {
+      yield value;
+    }
+  }
+};

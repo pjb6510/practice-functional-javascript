@@ -1,0 +1,57 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    const LFlatten = function* (iter) {
+      for (const val of iter) {
+        if (isIterable(val)) {
+          for (const innerVal of val) {
+            yield innerVal;
+          }
+        } else {
+          yield val;
+        }
+      }
+    };
+
+    titleLog("L.flatten function");
+
+    const iter = LFlatten([[1, 2], 3, 4, [5, 6], [7, 8, 9]]);
+    log(iter.next());
+    log(iter.next());
+    log(iter.next());
+    log(iter.next());
+    log(iter.next());
+    log(iter.next());
+
+    log(_.take(3, LFlatten([[1, 2], 3, 4, [5, 6], [7, 8, 9]])));
+    log(_.take(5, L.flatten([[1, 2], 3, 4, [5, 6], [7, 8, 9]])));
+
+    titleLog("L.deepFlat function");
+
+    log(isIterable('aawef'))
+
+    const deepArr = [
+      -2,
+      -1,
+      [[1, 2, 3], 4],
+      5,
+      6,
+      [7, [8], [9], [[[[[[10]]]]]]],
+    ];
+    const iter2 = L.deepFlat(deepArr);
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+    log(iter2.next());
+
+  </script>
+</body>
