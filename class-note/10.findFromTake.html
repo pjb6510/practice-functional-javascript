@@ -1,0 +1,38 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    const users = [
+      { age: 32 },
+      { age: 31 },
+      { age: 37 },
+      { age: 28 },
+      { age: 25 },
+      { age: 32 },
+      { age: 31 },
+      { age: 37 },
+    ];
+
+    const findTest = (func, iter) =>
+      _.go(
+        iter,
+        _.filter((a) => (log("filter", a), func(a))), // 여기서 모든 age를 순회해야함.
+        (a) => (log("filter reuslt", a), a),
+        _.take(1),
+        ([val]) => val
+      );
+
+    const find = (func, iter) =>
+      _.go(
+        iter,
+        L.filter(func),
+        _.take(1), // 조건에 맞는 값을 찾으면 바로 out.
+        ([val]) => val
+      );
+
+    log(findTest((user) => user.age < 30, users));
+
+    console.log(_.map((n) => n + 10, [1, 2, 3, 4, 5]));
+    console.log(_.filter((n) => n < 3, [1, 2, 3, 4, 5]));
+  </script>
+</body>

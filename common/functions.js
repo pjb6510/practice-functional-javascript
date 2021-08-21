@@ -8,36 +8,40 @@ _.curry =
       ? func(firstArg, ...restArgs)
       : (...restArgs) => func(firstArg, ...restArgs);
 
-_.map = _.curry((callback, iter) => {
+/*
+_.map = _.curry((func, iter) => {
   const result = [];
 
   for (const value of iter) {
-    result.push(callback(value));
+    result.push(func(value));
   }
 
   return result;
 });
+*/
 
-_.filter = _.curry((callback, iter) => {
+/*
+_.filter = _.curry((func, iter) => {
   const result = [];
 
   for (const value of iter) {
-    if (callback(value)) {
+    if (func(value)) {
       result.push(value);
     }
   }
 
   return result;
 });
+*/
 
-_.reduce = _.curry((callback, acc, iter) => {
+_.reduce = _.curry((func, acc, iter) => {
   if (iter === undefined) {
     iter = acc[Symbol.iterator]();
     acc = iter.next().value;
   }
 
   for (const value of iter) {
-    acc = callback(acc, value);
+    acc = func(acc, value);
   }
 
   return acc;
@@ -79,6 +83,9 @@ _.join = _.curry((seperator = ",", iter) =>
   _.reduce((a, b) => `${a}${seperator}${b}`, iter)
 );
 
+_.find = (func, iter) =>
+  _.go(iter, L.filter(func), _.take(1), ([value]) => value);
+
 L.range = function* (length) {
   let i = -1;
   while (++i < length) {
@@ -86,15 +93,15 @@ L.range = function* (length) {
   }
 };
 
-L.map = _.curry(function* (callback, iter) {
+L.map = _.curry(function* (func, iter) {
   for (const value of iter) {
-    yield callback(value);
+    yield func(value);
   }
 });
 
-L.filter = _.curry(function* (callback, iter) {
+L.filter = _.curry(function* (func, iter) {
   for (const value of iter) {
-    if (callback(value)) {
+    if (func(value)) {
       yield value;
     }
   }
@@ -105,3 +112,9 @@ L.entries = function* (obj) {
     yield [key, obj[key]];
   }
 };
+
+_.takeAll = _.take(Infinity);
+
+_.map = _.curry(_.pipe(L.map, _.takeAll));
+
+_.filter = _.curry(_.pipe(L.filter, _.takeAll));
