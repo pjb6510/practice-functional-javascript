@@ -1,0 +1,36 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    titleLog("flatMap function");
+
+    const arr = [
+      [1, 2],
+      [3, 4],
+      [5, 6, 7],
+    ];
+
+    log(
+      arr.flatMap(
+        (innerArr) => (
+          console.log("innerArr", innerArr), innerArr.map((n) => n ** 2)
+        )
+      )
+    );
+    // 기본 스펙으로 있는 flatMap.
+    // map에는 객체가 들어오고 map 콜백에서 리턴한 배열을 flatten해줌
+
+    const LFlatMap = _.curry(_.pipe(L.map, L.flatten));
+    const flatMap = _.curry(_.pipe(L.map, _.flatten));
+
+    const iter = L.flatMap((innerArr) => _.map((n) => n ** 2, innerArr), arr);
+    const iter2 = _.flatMap((innerArr) => _.map((n) => n ** 2, innerArr), arr);
+    log(...iter);
+    log(...iter2);
+
+    titleLog("flatMap example");
+
+    log(flatMap(L.range, [1, 2, 3]));
+    log(...LFlatMap(L.range, [1, 2, 3]));
+  </script>
+</body>

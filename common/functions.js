@@ -131,6 +131,8 @@ L.flatten = function* (iter) {
   }
 };
 
+_.flatten = _.pipe(L.flatten, _.takeAll);
+
 L.deepFlat = function* (iter) {
   for (const value of iter) {
     if (isIterable(value)) {
@@ -140,3 +142,7 @@ L.deepFlat = function* (iter) {
     }
   }
 };
+
+L.flatMap = _.curry(_.pipe(L.map, L.flatten));
+
+_.flatMap = _.curry(_.pipe(L.map, _.flatten));
