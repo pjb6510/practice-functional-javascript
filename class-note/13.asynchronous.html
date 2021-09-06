@@ -1,0 +1,37 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    titleLog("callback pattern vs promise");
+
+    const add5 = (num) => num + 5;
+
+    const add10 = (num, callback) => {
+      setTimeout(() => {
+        callback(num + 10);
+      }, 100);
+    };
+
+    const add20 = (num) =>
+      new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(num + 20);
+        }, 100);
+      });
+
+    // add10(10, log);
+    // add20(20).then(log);
+
+    titleLog("use promise");
+    const delay100 = (val) =>
+      new Promise((resolve) => setTimeout(() => resolve(val), 100));
+
+    const apply = (arg, func) =>
+      arg instanceof Promise ? arg.then(func) : func(arg);
+
+    log(apply(5, add5));
+    log(apply(delay100(5), add5));
+
+    delay100(100);
+  </script>
+</body>
