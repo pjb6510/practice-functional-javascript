@@ -1,0 +1,75 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    titleLog("monad");
+
+    const g1 = (a) => a + 1;
+    const f1 = (a) => a * a;
+
+    // 함수합성
+    // f . g == f(g(x))
+
+    // monad
+    // 함수 합성을 안전하게 해주는 wrapper
+    // 합성 과정에서 사이드 이펙트를 핸들링.
+
+    // 배열은 값이 있는 상태든 없는 상태든 함수 합성을 안전하게 해주는 monad로 볼 수 있음.
+    Array.of(1)
+      .map(g1)
+      .map(f1)
+      .forEach((r) => log(r));
+
+    []
+      .map(g1)
+      .map(f1)
+      .forEach((r) => log(r));
+
+    // Promise는 비동기 상황에서 시간이라는 가변상태를 핸들링 해주는 monad로 볼 수 있음.
+    Promise.resolve(1)
+      .then(g1)
+      .then(f1)
+      .then((r) => log(r));
+
+    // "Kleisli Composition"
+    // f . g
+    // f(g(x)) = f(g(x))
+    // f(g(x)) = g(x)
+
+    // g(x)를 했을 때 에러가 발생하면,
+    // 그 값으로 f를 실행 했을 때 여전히 g(x)값과 동일한 값을 반환하도록 만드는 합성
+
+    const users = [
+      { id: 1, name: "aa" },
+      { id: 2, name: "bb" },
+      { id: 3, name: "cc" },
+      { id: 4, name: "dd" },
+    ];
+
+    const getUserById = (id) => _.find((u) => u.id == id, users);
+
+    const f2 = ({ name }) => name;
+    const g2 = getUserById;
+
+    const fg1 = (id) => f2(g2(id));
+
+    log(fg1(2));
+
+    // 만약 찾는 값이 없으면?
+
+    users.pop();
+    users.pop();
+
+    // log(fg1(3)); Error
+
+    const getUserById2 = (id) =>
+      _.find((u) => u.id == id, users) || Promise.reject("읎어 임마");
+    const fg2 = (id) =>
+      Promise.resolve(id)
+        .then(getUserById2)
+        .then(f2)
+        .catch((a) => a);
+
+    fg2(4).then(log); // "읎어 임마"
+  </script>
+</body>
