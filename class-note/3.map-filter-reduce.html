@@ -74,13 +74,13 @@
 
     titleLog("reduce function");
 
-    const nums = [1,2,3,4,5];
+    const nums = [1, 2, 3, 4, 5];
 
     let total = 0;
     for (const n of nums) {
       total += n;
     }
-    log('total', total);
+    log("total", total);
 
     const reduce = (callback, start, iter) => {
       if (!iter) {
@@ -101,12 +101,6 @@
     log(reduce(add, nums));
 
     titleLog("total-price");
-    log(
-      reduce(
-        (price, product) => price + product.price,
-        0,
-        products
-      )
-    );
+    log(reduce((price, product) => price + product.price, 0, products));
   </script>
 </body>
