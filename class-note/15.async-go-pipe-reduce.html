@@ -1,0 +1,23 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    _.go(
+      1,
+      (a) => a + 10,
+      (a) => Promise.resolve(a + 100),
+      (a) => a + 1000,
+      (a) => a + 10000,
+      log
+    );
+
+    _.go(
+      1,
+      (a) => a + 10,
+      (a) => Promise.reject('error'),
+      (a) => a + 1000,
+      (a) => a + 10000,
+      log
+    ).catch(log);
+  </script>
+</body>

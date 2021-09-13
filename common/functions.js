@@ -36,17 +36,25 @@ _.filter = _.curry((func, iter) => {
 });
 */
 
+_.go1 = (value, func) =>
+  value instanceof Promise ? value.then(func) : func(value);
+
 _.reduce = _.curry((func, acc, iter) => {
   if (iter === undefined) {
     iter = acc[Symbol.iterator]();
     acc = iter.next().value;
   }
 
-  for (const value of iter) {
-    acc = func(acc, value);
-  }
+  return _.go1(acc, function recur(acc) {
+    for (const value of iter) {
+      acc = func(acc, value);
 
-  return acc;
+      if (acc instanceof Promise) {
+        return acc.then(recur);
+      }
+    }
+    return acc;
+  });
 });
 
 _.go = (...args) => _.reduce((value, func) => func(value), args);
