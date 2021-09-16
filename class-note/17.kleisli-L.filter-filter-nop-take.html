@@ -1,0 +1,17 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    _.go(
+      [1, 2, 3, 4, 5, 6],
+      L.map((a) => Promise.resolve(a ** 2)),
+      L.filter((a) => a % 2),
+      L.map((a) => Promise.resolve(a ** 2)),
+      _.take(4),
+      log
+    );
+
+    // nop이라는 error를 정의하여 Lazy filter에서 filtering되면 take의 catch에서 잡아줄 수 있도록 함.
+    // 만약 nop error가 아니라면 진짜 에러이므로 Promise.reject가 리턴되고, 그렇지 않으면 recur()이 호출되면서 다음 순회를 돎.
+  </script>
+</body>

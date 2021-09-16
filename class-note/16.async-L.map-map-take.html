@@ -1,0 +1,23 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    _.go(
+      [Promise.resolve(1), Promise.resolve(2), Promise.resolve(3)],
+      L.map((n) => n + 10),
+      _.take(2),
+      log
+    );
+
+    // take에서 Promise 사용을 위해 순회를 돌 때, recursiveCall로 바꿔주려면 for-of 를 while 로 바꿔줘야함.
+    // for-of 안에서 return을 하면 iterator를 강제로 return 시켜서 done이 true가 되어버림.
+
+    // 그냥 map 이 L.map 이후 takeAll이기 때문에 코드 수정 후 그냥 map으로도 잘 작동함.
+
+    _.go(
+      [Promise.resolve(1), Promise.resolve(2), Promise.resolve(3)],
+      _.map((n) => n + 10),
+      log
+    );
+  </script>
+</body>

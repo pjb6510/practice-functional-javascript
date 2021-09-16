@@ -78,15 +78,29 @@ _.range = (length) => {
 _.take = _.curry((limit, iter) => {
   const result = [];
 
-  for (const value of iter) {
-    result.push(value);
+  return (function recur() {
+    let current;
+    while (!(current = iter.next()).done) {
+      const value = current.value;
+      if (value instanceof Promise) {
+        return value
+          .then((value) => {
+            result.push(value);
 
-    if (result.length === limit) {
-      return result;
+            return result.length === limit ? result : recur();
+          })
+          .catch((e) => (e === _.nop ? recur() : Promise.reject(e)));
+      }
+
+      result.push(value);
+
+      if (result.length === limit) {
+        return result;
+      }
     }
-  }
 
-  return result;
+    return result;
+  })();
 });
 
 _.join = _.curry((seperator = ",", iter) =>
@@ -105,13 +119,18 @@ L.range = function* (length) {
 
 L.map = _.curry(function* (func, iter) {
   for (const value of iter) {
-    yield func(value);
+    yield _.go1(value, func);
   }
 });
 
+_.nop = Symbol("nop");
+
 L.filter = _.curry(function* (func, iter) {
   for (const value of iter) {
-    if (func(value)) {
+    const checkedValue = _.go1(value, func);
+    if (checkedValue instanceof Promise) {
+      yield checkedValue.then((b) => (b ? value : Promise.reject(_.nop)));
+    } else if (checkedValue) {
       yield value;
     }
   }
