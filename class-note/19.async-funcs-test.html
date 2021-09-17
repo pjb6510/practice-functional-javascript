@@ -1,0 +1,37 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    _.go(
+      [1, 2, 3, 4, 5, 6],
+      L.map((num) => {
+        log("map", num);
+        return new Promise((resolve) =>
+          setTimeout(() => resolve(num ** 2), 300)
+        );
+      }),
+      L.filter((a) => {
+        log("filter", a);
+        return new Promise((resolve) => setTimeout(() => resolve(a % 2), 300));
+      }),
+      _.take(2),
+      log
+    );
+
+    // _.go(
+    //   [1, 2, 3, 4, 5, 6],
+    //   L.map((num) => {
+    //     log("map", num);
+    //     return new Promise((resolve) =>
+    //       setTimeout(() => resolve(num ** 2), 300)
+    //     );
+    //   }),
+    //   L.filter((a) => {
+    //     log("filter", a);
+    //     return new Promise((resolve) => setTimeout(() => resolve(a % 2), 300));
+    //   }),
+    //   _.takeAll,
+    //   log
+    // );
+  </script>
+</body>
