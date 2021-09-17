@@ -1,5 +1,6 @@
 const _ = {};
 const L = {};
+const C = {};
 
 const isIterable = (value) => !!(value && value[Symbol.iterator]);
 
@@ -51,7 +52,7 @@ const reduceF = (acc, cur, func) =>
 
 _.reduce = _.curry((func, acc, iter) => {
   if (iter === undefined) {
-    return _.reduce(func, getHead(iter = acc[Symbol.iterator]()), iter);
+    return _.reduce(func, getHead((iter = acc[Symbol.iterator]())), iter);
   }
 
   iter = iter[Symbol.iterator]();
@@ -186,3 +187,19 @@ L.deepFlat = function* (iter) {
 L.flatMap = _.curry(_.pipe(L.map, L.flatten));
 
 _.flatMap = _.curry(_.pipe(L.map, _.flatten));
+
+const noop = () => {};
+const catchNoop = (arr) => (
+  arr.forEach((value) =>
+    value instanceof Promise ? value.catch(noop) : value
+  ),
+  arr
+);
+
+C.reduce = _.curry((func, acc, iter) => {
+  const tempIter = catchNoop(iter ? [...iter] : [...acc]);
+
+  return iter ? _.reduce(func, acc, tempIter) : _.reduce(func, tempIter);
+});
+
+C.take = _.curry((l, iter) => _.take(l, catchNoop([...iter])));
