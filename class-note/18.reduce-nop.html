@@ -1,0 +1,13 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    _.go(
+      [1, 2, 3, 4, 5, 6],
+      L.map((a) => Promise.resolve(a ** 2)),
+      L.filter((a) => a % 2),
+      _.reduce((acc, cur) => acc + cur, ),
+      log
+    );
+  </script>
+</body>

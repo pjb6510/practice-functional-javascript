@@ -39,15 +39,26 @@ _.filter = _.curry((func, iter) => {
 _.go1 = (value, func) =>
   value instanceof Promise ? value.then(func) : func(value);
 
+const getHead = (iter) => _.go1(_.take(1, iter), ([head]) => head);
+
+const reduceF = (acc, cur, func) =>
+  cur instanceof Promise
+    ? cur.then(
+        (cur) => func(acc, cur),
+        (e) => (e === _.nop ? acc : Promise.reject(e))
+      )
+    : func(acc, cur);
+
 _.reduce = _.curry((func, acc, iter) => {
   if (iter === undefined) {
-    iter = acc[Symbol.iterator]();
-    acc = iter.next().value;
+    return _.reduce(func, getHead(iter = acc[Symbol.iterator]()), iter);
   }
 
+  iter = iter[Symbol.iterator]();
   return _.go1(acc, function recur(acc) {
-    for (const value of iter) {
-      acc = func(acc, value);
+    let cur;
+    while (!(cur = iter.next()).done) {
+      acc = reduceF(acc, cur.value, func);
 
       if (acc instanceof Promise) {
         return acc.then(recur);
