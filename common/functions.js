@@ -89,6 +89,8 @@ _.range = (length) => {
 _.take = _.curry((limit, iter) => {
   const result = [];
 
+  iter = iter[Symbol.iterator]();
+
   return (function recur() {
     let current;
     while (!(current = iter.next()).done) {
