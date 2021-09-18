@@ -1,0 +1,24 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common//functions.js"></script>
+  <script>
+    // 특정 부분은 동기적으로 실행, 특정 부분은 비동기적으로 실행하기
+
+    const delay1000 = (n) =>
+      new Promise((resolve) => setTimeout(() => resolve(n), 1000));
+
+    const add = (a, b) => a + b;
+
+    C.map((a) => delay1000(a * a), [1, 2, 3, 4]).then(log);
+    C.filter((a) => delay1000(a % 2), [1, 2, 3, 4]).then(log);
+
+    _.go(
+      [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      C.map((a) => delay1000(a ** 2)),
+      L.filter((a) => delay1000(a % 2)),
+      L.map((a) => delay1000(a ** 2)),
+      C.reduce(add),
+      log
+    );
+  </script>
+</body>

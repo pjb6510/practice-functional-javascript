@@ -203,3 +203,9 @@ C.reduce = _.curry((func, acc, iter) => {
 });
 
 C.take = _.curry((l, iter) => _.take(l, catchNoop([...iter])));
+
+C.takeAll = C.take(Infinity);
+
+C.map = _.curry(_.pipe(L.map, C.takeAll))
+
+C.filter = _.curry(_.pipe(L.filter, C.takeAll));
