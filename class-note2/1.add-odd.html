@@ -1,0 +1,116 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common/fx.js"></script>
+  <script>
+    // 홀수만 3개 뽑아서 제곱하여 더하기
+
+    // 명령형
+    const f1 = (limit, list) => {
+      let acc = 0;
+      for (const a of list) {
+        if (a % 2) {
+          const b = a ** 2;
+          acc += b;
+          if (--limit === 0) break;
+        }
+      }
+
+      log(acc);
+    };
+
+    f1(3, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+    // 함수형
+
+    // 1. if는 filter로
+    // 2. 값 변화 후 변수 할당은 map으로
+    // 3. break는 take로
+    // 4. 축약 및 합산은 reduce로
+
+    const f2 = (limit, list) =>
+      _.go(
+        list,
+        L.filter((a) => a % 2),
+        L.map((a) => a ** 2),
+        _.take(limit),
+        _.reduce((a, b) => a + b),
+        log
+      );
+
+    f2(3, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+    // 규칙적인 수열 만들기
+
+    // 명령형
+
+    const f3 = (end) => {
+      let i = 0;
+      while (i < end) {
+        console.log(i);
+        i += 1;
+      }
+    };
+
+    f3(10);
+
+    // 함수형
+
+    // 5. while을 range로
+    // 6. sideEffect를 each로
+
+    const f4 = (end) => {
+      _.go(L.range(0, end, 1), _.each(log));
+    };
+
+    f4(10);
+
+    // 추억의 별 그리기 : 다음을 출력
+
+    // *
+    // **
+    // ***
+    // ****
+    // *****
+
+    // 내 코드
+    const f5 = (row) => {
+      _.go(
+        L.range(1, row + 1),
+        L.map((n) => "*".repeat(n)),
+        _.reduce((acc, star) => `${acc}\n${star}`),
+        log
+      );
+    };
+
+    // 답안 코드
+    const f6 = (row) => {
+      _.go(
+        L.range(1, row + 1),
+        L.map(L.range),
+        L.map(L.map((n) => "*")),
+        L.map(_.reduce((acc, star) => `${acc}${star}`)),
+        _.reduce((acc, row) => `${acc}\n${row}`),
+        log
+      );
+    };
+
+    f5(5);
+    f6(5);
+
+    // 구구단 코드 작성하기
+    const f7 = () => {
+      _.go(
+        L.range(2, 10),
+        L.map(n => _.go(
+          L.range(1, 10),
+          L.map(m => `${n} X ${m} = ${n * m}`),
+          _.reduce((a, b) => `${a}\n${b}`),
+        )),
+        _.reduce((a, b) => `${a}\n\n${b}`),
+        log
+      );
+    };
+
+    f7();
+  </script>
+</body>
