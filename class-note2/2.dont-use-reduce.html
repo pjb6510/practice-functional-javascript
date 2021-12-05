@@ -1,0 +1,58 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common/fx.js"></script>
+  <script>
+    titleLog('Total age of users under the age of 30');
+
+    const users = [
+      { name: 'AA', age: 35 },
+      { name: 'BB', age: 26 },
+      { name: 'CC', age: 28 },
+      { name: 'DD', age: 34 },
+      { name: 'EE', age: 23 },
+    ];
+
+    console.log(
+      'age',
+      _.go(
+        users,
+        L.map((user) => user.age),
+        L.filter((age) => age < 30),
+        _.reduce((a, b) => a + b)
+      )
+    );
+
+    titleLog('Query');
+
+    const obj1 = {
+      a: 1,
+      b: null,
+      c: 'CC',
+      d: 'DD',
+      e: undefined,
+    };
+    // result: a=1&c=CC&d=DD
+
+    const query = _.pipe(
+      Object.entries,
+      L.reject(([_, value]) => value == null),
+      L.map(([key, value]) => `${key}=${value}`),
+      _.reduce((a, b) => a + '&' + b)
+    );
+
+    const queryResult = query(obj1);
+
+    console.log(queryResult);
+
+    const split = _.curry((sep, str) => str.split(sep));
+
+    const queryToObject = _.pipe(
+      split('&'),
+      L.map(split('=')),
+      L.map(([key, value]) => ({ [key]: value })),
+      _.reduce(Object.assign)
+    );
+
+    console.log(queryToObject(queryResult));
+  </script>
+</body>
