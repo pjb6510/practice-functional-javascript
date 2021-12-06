@@ -1,0 +1,135 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common/fx.js"></script>
+  <script>
+    titleLog('iterable-programming');
+
+    const obj1 = {
+      a: 1,
+      b: 2,
+      c: 3,
+      d: 4,
+      e: 5,
+    };
+
+    titleLog('1. values');
+
+    _.go(
+      obj1,
+      Object.values,
+      _.reduce((a, b) => a + b),
+      log
+    );
+
+    L.values = function* (obj) {
+      for (const key in obj) {
+        yield obj[key];
+      }
+    };
+
+    _.go(obj1, L.values, _.take(2), log);
+
+    titleLog('2. entries');
+
+    L.entries = function* (obj) {
+      for (const key in obj) {
+        yield [key, obj[key]];
+      }
+    };
+
+    _.go(
+      obj1,
+      L.entries,
+      L.filter(([_, value]) => value % 2),
+      _.take(2),
+      log
+    );
+
+    titleLog('3. keys');
+
+    L.keys = function* (obj) {
+      for (const key in obj) {
+        yield key;
+      }
+    };
+
+    _.go(obj1, L.keys, _.each(console.log));
+
+    titleLog('iterable programming with any type');
+    console.log('Handle values with generator!');
+
+    titleLog('Object');
+
+    const object = (entries) =>
+      _.reduce((obj, [key, value]) => ((obj[key] = value), obj), {}, entries);
+
+    const map = new Map();
+    map.set('a', '1');
+    map.set('b', '2');
+    map.set('c', '3');
+    map.set('d', '4');
+
+    _.go(map, object, log);
+
+    titleLog('mapObject');
+
+    const mapObject = (func, obj) =>
+      _.go(
+        obj,
+        L.entries,
+        L.map(([key, value]) => [key, func(value)]),
+        object
+      );
+
+    const obj2 = { a: 1, b: 2, c: 3 };
+
+    console.log(mapObject((value) => value + 10, obj2));
+
+    titleLog('pick');
+
+    // const pick = (keys, obj) =>
+    //   _.go(
+    //     obj,
+    //     L.entries,
+    //     L.filter(([key, value]) => keys.includes(key)),
+    //     object
+    //   );
+
+    const pick = (keys, obj) =>
+      _.go(
+        keys,
+        L.map((key) => [[key], obj[key]]),
+        L.filter(([key, value]) => value !== undefined),
+        object
+      );
+
+    console.log(pick(['b', 'c'], obj1));
+
+    titleLog('indexBy');
+
+    const users = [
+      { id: 5, name: 'AA', age: 35 },
+      { id: 10, name: 'BB', age: 26 },
+      { id: 19, name: 'CC', age: 28 },
+      { id: 23, name: 'DD', age: 34 },
+      { id: 24, name: 'EE', age: 23 },
+      { id: 35, name: 'FF', age: 24 },
+    ];
+
+    const indexBy = (func, iter) =>
+      _.reduce((obj, val) => ((obj[func(val)] = val), obj), {}, iter);
+
+    console.log(indexBy((user) => user.id, users));
+
+    titleLog('filter indexByObj');
+
+    const filteredUsers = _.go(
+      indexBy((user) => user.id, users),
+      L.entries,
+      L.filter(([_, { age }]) => age < 30),
+      object
+    );
+
+    console.log(filteredUsers);
+  </script>
+</body>
