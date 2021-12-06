@@ -1,0 +1,39 @@
+<body>
+  <script src="../common/log.js"></script>
+  <script src="../common/fx.js"></script>
+  <script>
+    titleLog('safe composition');
+
+    const f = (x) => x + 10;
+    const g = (x) => x - 5;
+    const fg = (x) => g(f(x));
+
+    titleLog('map + each with one item');
+
+    _.go(30, fg, log);
+    _.go(undefined, fg, log); // NaN
+
+    _.go([30], _.map(fg), _.each(log)); // ok
+    _.go([], _.map(fg), _.each(log)); // ok
+
+    titleLog('L.filter instead of find');
+
+    const users2 = [
+      { name: 'AA', age: 35 },
+      { name: 'CC', age: 28 },
+      { name: 'DD', age: 34 },
+      { name: 'EE', age: 23 },
+    ];
+
+    const user = _.find((user) => (user.name === 'BB'), users2);
+    if (user) {
+      console.log(user);
+    }
+
+    _.go(
+      users2,
+      L.filter((user) => (user.name === 'BB')),
+      _.each(log)
+    ); // better than above code!
+  </script>
+</body>
