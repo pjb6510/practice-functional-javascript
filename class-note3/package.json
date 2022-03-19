@@ -1,0 +1,29 @@
+{
+  "name": "fp-ts-practice",
+  "version": "1.0.0",
+  "main": "index.js",
+  "description": "https://gcanti.github.io/fp-ts/, ref:https://github.com/alstn2468/getting-started-fp-ts",
+  "scripts": {
+    "test": "jest",
+    "start": "webpack serve --open",
+    "build": "webpack"
+  },
+  "author": "ParkJeongbeen",
+  "devDependencies": {
+    "@babel/core": "^7.17.5",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-typescript": "^7.16.7",
+    "@types/jest": "^27.4.1",
+    "@types/node": "^17.0.21",
+    "babel-loader": "^8.2.3",
+    "fp-ts": "^2.11.9",
+    "html-webpack-plugin": "^5.5.0",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.1.3",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.5",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4"
+  }
+}
