@@ -2,7 +2,7 @@
   "name": "fp-ts-practice",
   "version": "1.0.0",
   "main": "index.js",
-  "description": "https://gcanti.github.io/fp-ts/, ref:https://github.com/alstn2468/getting-started-fp-ts",
+  "description": "https://gcanti.github.io/fp-ts/, ref:https://github.com/alstn2468/getting-started-fp-ts, https://github.com/inato/fp-ts-cheatsheet",
   "scripts": {
     "test": "jest",
     "start": "webpack serve --open",
